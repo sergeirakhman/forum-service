@@ -13,7 +13,7 @@ import {
 
 const router = Router();
 
-router.post('/post/:user', addPost);
+router.post('/post/:author', addPost);
 router.delete('/post/:postId', deletePost);
 router.patch('/post/:postId/like', addLike);
 router.get('/post/:postId', findPostById);

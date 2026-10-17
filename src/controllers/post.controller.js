@@ -2,8 +2,9 @@ import * as postService from '../services/post.service.js'
 import {err_404} from "../errors/err.js";
 
 export const addPost = async (req, res) => {
-    const post = await postService.addPost(req.body);
-    post ? res.json(post) : res.status(400).send(post);
+    console.log(req.params.author)
+    const post = await postService.addPost(req.params.author, req.body);
+    return res.status(201).json(post);
 }
 
 export const deletePost = async (req, res) => {
@@ -17,8 +18,8 @@ export const addLike = async (req, res) => {
 }
 
 export const findPostById = async (req, res) => {
-    const post = await postService.findPostById(req.params.id);
-    post ? res.json(post) : res.status(404).send(err_404(req.params.id, req.params));
+    const post = await postService.findPostById(req.params.postId);
+    post ? res.json(post) : res.status(404).send(err_404(req.params.postId, req.params));
 }
 
 export const addComment = async (req, res) => {

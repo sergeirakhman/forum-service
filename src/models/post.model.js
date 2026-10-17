@@ -1,4 +1,5 @@
-import {Schema} from "mongoose";
+import {Schema, model} from "mongoose";
+import Comment from "./comment.model.js";
 
 const postSchema =  new Schema( {
     title: {type: String, required: true, trim: true},
@@ -11,7 +12,16 @@ const postSchema =  new Schema( {
     },
     {
         versionKey: false,
-        timestamps: true
+        timestamps: true,
+        toJSON: {
+            transform(doc, ret) {
+                ret.id = doc._id;
+                ret.dateCreated = doc.dateCreated.toISOString().slice(0, 19);
+                delete ret._id;
+                delete ret.createdAt;
+                delete ret.updatedAt;
+            }
+        },
     });
 
-export default mongoose.model('Post', postSchema, 'posts');
+export default model('Post', postSchema, 'posts');
