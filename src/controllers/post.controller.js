@@ -8,8 +8,11 @@ export const addPost = async (req, res) => {
 }
 
 export const deletePost = async (req, res) => {
-    const post = await postService.deletePost(req.params.id);
-    post ? res.json(post) : res.status(404).send(err_404(req.params.id, req.params));
+    try {
+        const post = await postService.deletePost(req.params.postId);
+        res.json(post)
+    }
+    catch (e) { res.status(404).send(err_404(req.params, e.message));}
 }
 
 export const addLike = async (req, res) => {
@@ -18,12 +21,16 @@ export const addLike = async (req, res) => {
 }
 
 export const findPostById = async (req, res) => {
-    const post = await postService.findPostById(req.params.postId);
-    post ? res.json(post) : res.status(404).send(err_404(req.params.postId, req.params));
+    try {
+        const post = await postService.findPostById(req.params.postId);
+        res.json(post)
+    }
+    catch (e) {
+        console.log(e);res.status(404).send(err_404(req.params, e.message));}
 }
 
 export const addComment = async (req, res) => {
-    const success = await postService.addComment(req.params.postId, req.body.message, req.body.commenter);
+    const success = await postService.addComment(req.params.postId, req.body.message, req.params.commenter);
     success ? res.status(204).send() : res.status(404).send(err_404(req.params.id, req.params));
 }
 
@@ -33,16 +40,20 @@ export  const findPostsByAuthor = async (req, res) => {
 }
 
 export  const findPostsByPeriod = async (req, res) => {
-    const posts = await postService.findPostsByPeriod(req.params.dateFrom, req.params.dateTo);
+    const posts = await postService.findPostsByPeriod(req.query.dateFrom, req.query.dateTo);
     res.json(posts);
 }
 
 export const findPostsByTags = async (req, res) => {
-    const posts = await postService.findPostsByTags(req.params.tags);
+    const tags = [].concat(req.query.values || []);
+    const posts = await postService.findPostsByTags(tags);
     res.json(posts);
 }
 
 export const updatePost = async (req, res) => {
-    const post = await postService.updatePost(req.params.id);
-    post ? res.json(post) : res.status(404).send(err_404(req.params.id, req.params));
+    try {
+        const post = await postService.updatePost(req.params.postId, req.body);
+        res.json(post)
+    }
+    catch (e) { res.status(404).send(err_404(req.params, e.message));}
 }

@@ -1,9 +1,9 @@
-export const err_404 = (id, path) => {
+export const err_404 = (path, message) => {
     return {
         "timestamp": new Date().toISOString(),
         "status": 404,
         "error": "Not Found",
-        "message": `Post with id ${id} not found`,
+        "message": message,
         "path": path
     }
 }

@@ -1,5 +1,35 @@
 import Post from '../models/post.model.js';
 
-export const addPost = post => Post.create(post);
+export const addPost = async post => Post.create(post);
 
-export const findById = id => Post.findById(id).exec();
+export const deletePost = async postId => Post.findByIdAndDelete(postId).exec();
+
+export const addLike = async postId => {
+    const post = await findById(postId);
+    post.likes += 1;
+    return updatePost(postId, post);
+}
+
+export const addComment = async (postId, comment, commenter) => {
+    const post = await findById(postId);
+    console.log(post)
+    post.comments.push({author: commenter,
+        message: comment,
+    })
+    console.log(post)
+    return await updatePost(postId, post);
+}
+
+export const findById = async postId => Post.findById(postId).exec();
+
+export const findByAuthor = async author => Post.find({author: new RegExp(`^${author}$`, 'i')});
+
+export const findByPeriod = async (dateFrom, dateTo) => Post.find({dateCreated: {$gte: new Date(dateFrom), $lte: new Date(dateTo)}})
+
+export const findByTags = async values => {
+    console.log(values);
+    const regexTags = values.map(tag => new RegExp(`^${tag}$`, 'i'));
+    return Post.find({tags: {$in: regexTags}})
+};
+
+export const updatePost = (postId, data) => Post.findByIdAndUpdate(postId, data, {returnDocument: 'after'}).exec();
