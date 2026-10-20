@@ -1,5 +1,4 @@
 import * as postRep from "../repository/post.repository.js";
-import * as Post from "../repository/post.repository.js";
 
 export const addPost = async (author, data) => {
     const tags = [... new Set(data.tags)];
@@ -7,40 +6,40 @@ export const addPost = async (author, data) => {
 }
 
 export const deletePost = async (postId) => {
-    const post = await Post.deletePost(postId);
+    const post = await postRep.deletePost(postId);
     if (!post) throw new Error(`Post with ${postId} not found`);
     return post;
 }
 
 export const addLike = async (postId) => {
-    const post = await Post.addLike(postId);
+    const post = await postRep.addLike(postId);
     if (!post) throw new Error(`Post with ${postId} not found`);
     return post;
 }
 
 export const findPostById = async (postId) => {
-    const post = await Post.findById(postId);
+    const post = await postRep.findById(postId);
     if (!post) throw new Error(`Post with ${postId} not found`);
     return post;
 }
 
 export const addComment = async (postId, comment, commenter) => {
-    const post = await Post.addComment(postId, comment, commenter);
+    const post = await postRep.addComment(postId, comment, commenter);
     if (!post) throw new Error(`Post with ${postId} not found`);
     return post;
 }
 
-export  const findPostsByAuthor = async (author) => await Post.findByAuthor(author);
+export  const findPostsByAuthor = async (author) => await postRep.findByAuthor(author);
 
-export  const findPostsByPeriod = async (dateFrom, dateTo) => await Post.findByPeriod(dateFrom, dateTo);
+export  const findPostsByPeriod = async (dateFrom, dateTo) => await postRep.findByPeriod(dateFrom, dateTo);
 
-export const findPostsByTags = async (tags) => {
-    tags = Array.isArray(tags) ? tags : [tags];
-    return await Post.findByTags(tags);
+export const findPostsByTags = async (tagsString) => {
+    const tags = tagsString.split(',').map(tag => tag.trim());
+    return await postRep.findByTags(tags);
 }
 
 export const updatePost = async(postId, data) => {
-    const post = await Post.updatePost(postId, data);
+    const post = await postRep.updatePost(postId, data);
     if (!post) throw new Error(`Post with ${postId} not found`);
     return post;
 }
