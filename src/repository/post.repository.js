@@ -29,4 +29,9 @@ export const findByTags = async values => {
     return Post.find({tags: {$in: regexTags}}).exec();
 };
 
-export const updatePost = (postId, data) => Post.findByIdAndUpdate(postId, data, {returnDocument: 'after'}).exec();
+export const updatePost = (postId, updatedData) => {
+    const tags = updatedData.tags ?? [];
+    delete updatedData.tags;
+    const data = {...updatedData, $addToSet: {tags}};
+    return Post.findByIdAndUpdat(id, data, {returnDocument: 'after'}).exec();
+}
