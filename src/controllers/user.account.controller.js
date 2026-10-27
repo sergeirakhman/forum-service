@@ -1,8 +1,8 @@
 import * as userAccountService from '../services/user.account.service.js'
 
-export const registerUser = async (req, res) => {
-    const userAccount = await userAccountService.registerUser(req.body);
-    userAccount ? res.status(201).json(userAccount) : res.status(409).send();
+export const registerUser = async (req, res, next) => {
+    try{}
+    catch(err){}
 }
 
 export const loginUser = async (req, res) => {

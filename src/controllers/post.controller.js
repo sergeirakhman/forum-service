@@ -7,31 +7,39 @@ export const addPost = async (req, res) => {
     return res.status(201).json(post);
 }
 
-export const deletePost = async (req, res) => {
+export const deletePost = async (req, res, next) => {
     try {
         const post = await postService.deletePost(req.params.postId);
         res.json(post)
     }
-    catch (e) { res.status(404).send(err_404(req.params, e.message));}
+    catch (e) { return next(e);}
 }
 
-export const addLike = async (req, res) => {
-    const success = await postService.addLike(req.params.postId);
-    success ? res.status(204).send() : res.status(404).send(err_404(req.params.id, req.params));
+export const addLike = async (req, res, next) => {
+    try {
+        await postService.addLike(req.params.postId);
+        return res.sendStatus(204);
+    }
+    catch (e) {
+        return next(e);
+    }
 }
 
-export const findPostById = async (req, res) => {
+export const findPostById = async (req, res, next) => {
     try {
         const post = await postService.findPostById(req.params.postId);
         res.json(post)
+    } catch (e) {
+        return next(e);
     }
-    catch (e) {
-        console.log(e);res.status(404).send(err_404(req.params, e.message));}
 }
 
-export const addComment = async (req, res) => {
-    const success = await postService.addComment(req.params.postId, req.body.message, req.params.commenter);
-    success ? res.status(204).send() : res.status(404).send(err_404(req.params.id, req.params));
+export const addComment = async (req, res, next) => {
+    try {
+        const post = await postService.addComment(req.params.postId, req.body.message, req.params.commenter);
+        return res.json(post);
+    }
+    catch (e) { return next(e);}
 }
 
 export  const findPostsByAuthor = async (req, res) => {
@@ -50,10 +58,10 @@ export const findPostsByTags = async (req, res) => {
     res.json(posts);
 }
 
-export const updatePost = async (req, res) => {
+export const updatePost = async (req, res, next) => {
     try {
         const post = await postService.updatePost(req.params.postId, req.body);
         res.json(post)
     }
-    catch (e) { res.status(404).send(err_404(req.params, e.message));}
+    catch (e) { return next(e);}
 }

@@ -3,13 +3,15 @@ import postRoutes from "./routes/post.routes.js";
 import accountRoutes from "./routes/user.account.routes.js";
 import config from "./configuration/config.js";
 import mongoose from "mongoose";
+import errHandler from "./middlewares/error.middleware.js";
 
 const app = express();
 
 app.use(express.json());
 
 app.use('/forum', postRoutes);
-app.use(accountRoutes);
+app.use('/account', accountRoutes);
+app.use(errHandler);
 
 app.use((req, res) =>
     res.status(404).type('text/plain; charset=utf-8').send('Not Found')
