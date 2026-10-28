@@ -9,16 +9,17 @@ import {
     changePassword,
     getUser
 } from "../controllers/user.account.controller.js";
+import validate from "../middlewares/validator.middleware.js";
 
 const router = Router();
 
-router.post('/register', registerUser);
+router.post('/register', validate('registerUser') ,registerUser);
 router.post('/login', loginUser);
-router.delete('/user/:user', deleteUser);
-router.patch('/user/:user', updateUser);
-router.patch('/user/:user/role/:role', addRole);
-router.delete('/user/:user/role/:role', deleteRole);
+router.delete('/user/:login', deleteUser);
+router.patch('/user/:login', updateUser);
+router.patch('/user/:login/role/:role', validate('changeRoles'), addRole);
+router.delete('/user/:login/role/:role', validate('changeRoles', 'params'),deleteRole);
 router.patch('/password', changePassword);
-router.get('/user/:user/role/:role', getUser)
+router.get('/user/:login/role/:role', getUser)
 
 export default router;
