@@ -1,7 +1,10 @@
 import * as userAccountRepository from "../repository/user.account.repository.js";
+import bcrypt from "bcrypt";
 
 export const registerUser = async (user) => {
     try {
+        const salt = await bcrypt.genSalt(12);
+        //user.password = await bcrypt.hash(user.password, salt);
         return await userAccountRepository.addUser(user);
     } catch (e) {
         throw new Error('User already exists');
@@ -40,16 +43,11 @@ export const changeRoles = async (login, role, isAddRole) => {
     return user;
 }
 
-export const addRole = async (user, role) => {
-    //TODO
-}
+export const changePassword = async (login, newPassword) => {
+    await getUser(login);
+    const salt = await bcrypt.genSalt(12);
+    return await userAccountRepository.changePassword(login, await bcrypt.hash(newPassword, salt));
 
-export const deleteRole = async (user, role) => {
-    //TODO
-}
-
-export  const changePassword = async () => {
-    //TODO
 }
 
 export  const getUser = async (login) => {
